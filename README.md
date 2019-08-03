@@ -24,7 +24,7 @@ $rails c
 $rails s
 
 ```
-Use this APP : https://univcontact.herokuapp.com
+Use this APP : https://contatmanage.herokuapp.com/
 
 ## License & Copyrights
 
