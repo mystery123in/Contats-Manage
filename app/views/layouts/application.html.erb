@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UnivContact</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true,:cache => true %>
+  <%= csrf_meta_tags %>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+
+
+
+<body>
+	<!-- navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color: #282c33">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+          <%= link_to "UnivContact", root_path, class: "navbar-brand text-uppercase" %>          
+        </div>
+        <!-- /.navbar-header -->
+        <% if user_signed_in? %>
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            
+            <div class="navbar-right nav btn">
+              <%= link_to new_contact_path ,  class: "btn btn-primary" do %>
+                <i class="glyphicon glyphicon-plus"></i> 
+                Add Contacts
+              <% end %>
+            </div>
+            
+            
+          </div>
+        <% else %>
+        <ul class="navbar-nav pull-right nav">
+          <li class="<%= 'active' if current_page?(new_user_session_path) %>">
+            <%= link_to new_session_path(resource_name),class: "pull-right" do%>
+            <i class="fas fa-sign-in-alt"></i>&nbsp;Login
+            <% end %>
+          </li>
+          <li class="<%= 'active' if current_page?(new_user_registration_path) %>">
+            <%= link_to  new_registration_path(resource_name) , class: "pull-right" do%>
+            <span class="nav-link"><i class="fas fa-user-plus"></i>&nbsp;Register</span>
+            <% end %>
+          </li>
+          
+
+        </ul> 
+        <% end %>
+      </div>
+    </nav>
+    
+
+    <% if user_signed_in? %>
+    <div style="text-align: center">
+      <h1 >Hello <%= current_user.uname %></h1>
+          <%= link_to edit_user_registration_path, class: "btn btn-default" do %>
+            <i class="fas fa-user-edit"></i>
+            Edit Profile
+          <% end %>  
+      
+          <%= link_to destroy_user_session_path, :method => 'delete' , class: "btn btn-default" do%>
+            <i class="glyphicon glyphicon-log-out"></i> 
+            Logout
+          <% end %>
+          
+
+
+        
+    </div><br>
+      
+      <% end %>
+
+    <div class="jumbotron jumbotron-fluid" style="background-color: #8d9196">
+        <div class="container">
+          <h1 class="display-4">Contact Management System</h1>
+          <p class="lead">Manage your contact simply...</p>
+        </div>
+      </div>
+	
+  <!-- content -->
+  
+    <div class="container">
+      <div class="row">
+      <% if user_signed_in? %>
+        <div class="col-md-3">
+          <div class="list-group">
+
+            <% active = params[:group_id] == nil ? 'active' : ''%>
+            <%= link_to contacts_path, class: "list-group-item active" do%>
+              All Contacts<span class="badge"><%= Contact.count %></span>
+            <% end %>
+            <% Group.all.each do |group| %>
+              <% active = params[:group_id].to_i== group.id ? 'active' : ''%>
+              <%= link_to contacts_path(group_id: group.id), class: "list-group-item #{active}" do%>
+                <%= group.name %><span class="badge"><%= group.contacts.count %></span>
+              <% end %>
+              
+            <% end %>
+          </div>
+        </div><!-- /.col-md-3 -->
+      <% end %>
+        <div class="col-md-9 pull-right ">
+
+          <!--Flash Messages-->
+          <% flash.each do |type, message| %>
+            
+              <%= content_tag :div, class: "alert alert-#{type} alert-dismissible", role: "alert" do %>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= message %>
+              <% end %> 
+             
+          <% end %> 
+
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+   
+      <footer id="sticky-footer" class="py-4 bg-dark text-white-50" style="flex-shrink: none;">
+          <div class="container text-center">
+            <small>Copyright &copy; UnivContact</small>
+          </div>
+      </footer>
+   
+
+</body>
+</html>
